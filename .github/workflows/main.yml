@@ -1,9 +1,9 @@
-name: Typecheck on push to master
+name: Typecheck on push to main
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   typecheck:
