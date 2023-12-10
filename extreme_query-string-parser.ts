@@ -1,3 +1,4 @@
+// https://typehero.dev/challenge/query-string-parser
 import type { Equal, Expect } from "@type-challenges/utils";
 
 type cases = [
@@ -38,15 +39,27 @@ type cases = [
   Expect<Equal<ParseQueryString<"k1&k1=v1">, { k1: [true, "v1"] }>>,
 ];
 
+type test0 = ParseQueryString<"">;
+type test1 = ParseQueryString<"k1">;
+type test2 = ParseQueryString<"k1&k1">;
+type test3 = ParseQueryString<"k1&k2">;
+type test4 = ParseQueryString<"k1=v1">;
+type test5 = ParseQueryString<"k1=v1&k1=v2">; //
+type test6 = ParseQueryString<"k1=v1&k2=v2">;
+type test7 = ParseQueryString<"k1=v1&k2=v2&k1=v2">;
+type test8 = ParseQueryString<"k1=v1&k2">;
+type test9 = ParseQueryString<"k1=v1&k1=v1">;
+type test10 = ParseQueryString<"k1=v1&k1=v2&k1=v1">;
+type test11 = ParseQueryString<"k1=v1&k2=v1&k1=v2&k1=v1">;
+type test12 = ParseQueryString<"k1=v1&k2=v2&k1=v2&k1=v3">;
+type test13 = ParseQueryString<"k1=v1&k1">;
+type test14 = ParseQueryString<"k1&k1=v1">;
+
 type Includes<Tuple, Item> = Tuple extends [infer First, ...infer Rest]
   ? First extends Item
     ? true
     : Includes<Rest, Item>
   : false;
-
-type testIncludes = Includes<[1, 2], 3>;
-type testIncludes1 = Includes<[1, 2, 3], 2>;
-type testIncludes2 = Includes<[1, 2, 3], 1>;
 
 // pretty merge
 type PrettyMerge<
@@ -76,11 +89,6 @@ type testMerge1 = PrettyMerge<{ k1: "v1" }, { k1: "v2" }>;
 // want empty to be last case
 type NotEmpty<S extends string> = S extends "" ? false : true;
 
-// match K = V & -> recur
-// match K & -> recur
-// match K = V -> return
-// match K -> return
-// empty string -> return
 type ParseQueryString<
   S extends string,
   Acc extends Record<string, unknown> = {},
@@ -98,19 +106,3 @@ type ParseQueryString<
           NotEmpty<S> extends true
           ? PrettyMerge<Acc, Record<S, true>>
           : Acc;
-
-type test0 = ParseQueryString<"">;
-type test1 = ParseQueryString<"k1">;
-type test2 = ParseQueryString<"k1&k1">;
-type test3 = ParseQueryString<"k1&k2">;
-type test4 = ParseQueryString<"k1=v1">;
-type test5 = ParseQueryString<"k1=v1&k1=v2">; //
-type test6 = ParseQueryString<"k1=v1&k2=v2">;
-type test7 = ParseQueryString<"k1=v1&k2=v2&k1=v2">;
-type test8 = ParseQueryString<"k1=v1&k2">;
-type test9 = ParseQueryString<"k1=v1&k1=v1">;
-type test10 = ParseQueryString<"k1=v1&k1=v2&k1=v1">;
-type test11 = ParseQueryString<"k1=v1&k2=v1&k1=v2&k1=v1">;
-type test12 = ParseQueryString<"k1=v1&k2=v2&k1=v2&k1=v3">;
-type test13 = ParseQueryString<"k1=v1&k1">;
-type test14 = ParseQueryString<"k1&k1=v1">;
