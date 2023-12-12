@@ -60,13 +60,11 @@ type Merge<
   A extends Record<string, unknown>,
   B extends Record<string, unknown>,
 > = Omit<A, keyof B> & {
-  [K in keyof B]: K extends keyof A
-    ? B[K] extends A[K]
-      ? A[K]
-      : A[K] extends unknown[]
-        ? ConcatIfNotFound<A[K], B[K]>
-        : [A[K], B[K]]
-    : B[K]
+  [K in keyof B]: K extends keyof A ?
+    B[K] extends A[K] ? A[K]
+    : A[K] extends unknown[] ? ConcatIfNotFound<A[K], B[K]>
+    : [A[K], B[K]]
+  : B[K]
 }
 
 type ParseQueryString<
@@ -74,16 +72,14 @@ type ParseQueryString<
   Acc extends Record<string, unknown> = {},
 > = Prettify<
   // match K = V & -> recur
-  S extends `${infer K}=${infer V}&${infer Rest}`
-    ? ParseQueryString<Rest, Merge<Acc, Record<K, V>>>
-    : // match K & -> recur
-      S extends `${infer K}&${infer Rest}`
-      ? ParseQueryString<Rest, Merge<Acc, Record<K, true>>>
-      : // match K = V -> return
-        S extends `${infer K}=${infer V}`
-        ? Merge<Acc, Record<K, V>>
-        : // match K -> return
-          NotEmpty<S> extends true
-          ? Merge<Acc, Record<S, true>>
-          : Acc
+  S extends `${infer K}=${infer V}&${infer Rest}` ?
+    ParseQueryString<Rest, Merge<Acc, Record<K, V>>>
+  : // match K & -> recur
+  S extends `${infer K}&${infer Rest}` ?
+    ParseQueryString<Rest, Merge<Acc, Record<K, true>>>
+  : // match K = V -> return
+  S extends `${infer K}=${infer V}` ? Merge<Acc, Record<K, V>>
+  : // match K -> return
+  NotEmpty<S> extends true ? Merge<Acc, Record<S, true>>
+  : Acc
 >

@@ -1,4 +1,5 @@
 # typehero
+
 https://typehero.dev
 
 A playground with prettier's new ternary formatting
