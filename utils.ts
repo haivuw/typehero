@@ -38,3 +38,9 @@ type testOr1 = Or<false, false>
 
 // want empty to be last case
 export type NotEmpty<S extends string> = S extends '' ? false : true
+
+// T extends never won't work
+export type IsNever<T> = [T] extends [never] ? true : false
+
+// (1 | 2)[] extends (1[] | 2[])
+export type IsUnion<T> = T[] extends (T extends T ? T[] : never) ? false : true
