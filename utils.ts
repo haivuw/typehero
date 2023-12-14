@@ -12,9 +12,9 @@ export type ConcatIfNotFound<T extends unknown[], Item> = Includes<
   T
 : [...T, Item]
 
-export type Prettify<T extends Record<string, unknown>> = {
-  [K in keyof T]: T[K]
-}
+type Prettify<T> = {
+  [K in keyof T]: T[K] extends object ? Prettify<T[K]> : T[K]
+} & unknown
 
 type pretty = Prettify<{ k1: 'v1' } & { k2: 'v2' }>
 
@@ -44,3 +44,11 @@ export type IsNever<T> = [T] extends [never] ? true : false
 
 // (1 | 2)[] extends (1[] | 2[])
 export type IsUnion<T> = T[] extends (T extends T ? T[] : never) ? false : true
+
+export type DeepMutable<T> = {
+  -readonly [K in keyof T]: T[K] extends (
+    Record<string, unknown> | readonly unknown[]
+  ) ?
+    DeepMutable<T[K]>
+  : T[K]
+}
