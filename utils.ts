@@ -12,7 +12,7 @@ export type ConcatIfNotFound<T extends unknown[], Item> = Includes<
   T
 : [...T, Item]
 
-type Prettify<T> = {
+export type Prettify<T> = {
   [K in keyof T]: T[K] extends object ? Prettify<T[K]> : T[K]
 } & unknown
 
