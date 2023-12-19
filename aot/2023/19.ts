@@ -45,10 +45,10 @@ type _Toys = ['🛹', '🚲', '🛴', '🏄']
 type Rebuild<List, Toys extends _Toys[number][] = _Toys> = List extends (
   [infer First, ...infer Rest]
 ) ?
-  [...Multiply<Toys[0], First>, ...Rebuild<Rest, Circle<Toys>>]
+  [...Multiply<Toys[0], First>, ...Rebuild<Rest, Cycle<Toys>>]
 : []
 
-type Circle<T> = T extends [infer First, ...infer Rest] ? [...Rest, First] : T
+type Cycle<T> = T extends [infer First, ...infer Rest] ? [...Rest, First] : T
 
 type Multiply<Toy, N, Acc extends unknown[] = []> = Acc['length'] extends N ?
   Acc
